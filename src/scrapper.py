@@ -16,7 +16,7 @@ class Scrapper(object):
 		return table
 
 	def get_sub_elements(self,html_doc):
-
+		""" get elements inside a father link. Gets the content of the 3 first tables, append the image link and return as a tuple"""
 		img = html_doc.find('div',{'class':'figure'}).find('img')['src']
 
 		td_list = [td.find_all('td') for td in html_doc.find_all('table',{'class':'vitals-table'})]
@@ -25,13 +25,14 @@ class Scrapper(object):
 			for td in tds:
 				lista.append(td.get_text().strip().replace("\n",""))
 
+
 		return (img,lista)
 
 	def get_sub_headers(self, html_doc):
+		""" get the header of the 3 first tables, appending with the 'Image' header."""
 		col = []
 		th_list = [th.find_all('th') for th in html_doc.find_all('table',{'class':'vitals-table'})]
 
-		#so pego as duas primeiras tabelas
 		for ths in th_list[:3]:
 			for th in ths:
 				col.append((th.get_text().strip().replace("\n",""),[]))
@@ -40,6 +41,7 @@ class Scrapper(object):
 		return col
 
 	def get_html_content(self, url):
+		""" generic function to return the content of the given url"""
 		page = requests.get(self.base_url + '/' + url)
 		html_doc = bs(page.content, 'html.parser')
 
@@ -93,11 +95,12 @@ class Scrapper(object):
 			line.append(sub_elements[0])
 
 			print("Capiturando " + name_pokedex+extended_name + '...')
-			
+			#Qubrar codigo aqui.
 			if len(line) != len(col):
 				line.insert(18,"")
 
 			i = 0
+			#matchs the lines with the columns
 			for l in line:
 				col[i][1].append(l)
 				i+=1
@@ -105,15 +108,18 @@ class Scrapper(object):
 		return col
 
 	def list_to_dataFrame(self, lista):
+		""" get a list and return a dataframe with that content """
 		Dict = {title:column for (title,column) in lista}
 		df = pd.DataFrame(Dict)
 		return df
 
 	def dataFameToJson(self, dataFrame):
+		""" write dataframe as a json file"""
 		dataFrame.to_json('../data/PokemonData.json')
 
 	def dataFrameToCsv(self,dataFrame):
-		dataFrame.to_csv('../data/PokemonData.csv', sep='\t', encoding='utf-8')
+		""" write dataframe as a csv file, separated by ',' """
+		dataFrame.to_csv('../data/PokemonData.csv', sep=',', encoding='utf-8')
 
 	def str_bracket(word):
 	    '''Add brackets around second term'''
