@@ -21,7 +21,7 @@ class Scrapper(object):
 
 		td_list = [td.find_all('td') for td in html_doc.find_all('table',{'class':'vitals-table'})]
 		lista = []
-		for tds in td_list[:2]:
+		for tds in td_list[:3]:
 			for td in tds:
 				lista.append(td.get_text().strip().replace("\n",""))
 
@@ -31,7 +31,8 @@ class Scrapper(object):
 		col = []
 		th_list = [th.find_all('th') for th in html_doc.find_all('table',{'class':'vitals-table'})]
 
-		for ths in th_list[:2]:
+		#so pego as duas primeiras tabelas
+		for ths in th_list[:3]:
 			for th in ths:
 				col.append((th.get_text().strip().replace("\n",""),[]))
 
@@ -54,7 +55,7 @@ class Scrapper(object):
 		[col.append((header.get_text(),[])) for header in rows.pop(0).find_all('div', {'class':"sortwrap"})]
 
 		#reading the rest of the contents
-		for index, row in enumerate(rows):
+		for row in rows:
 			line = []
 			num_pokedex = row.find('td', {'class':'cell-icon-string'}).get_text().strip()
 			name_pokedex = row.find('a',{'class':'ent-name'}).get_text()
@@ -65,7 +66,6 @@ class Scrapper(object):
 			except:
 				pass
 
-			print("Capiturando " + name_pokedex+extended_name + '...')
 			link = row.find('a',{'class':'ent-name'})['href']
 			sub_link = self.base_url + link
 			types = [types.get_text() for types in row.find_all('a',{'class':'type-icon'})]
@@ -92,13 +92,15 @@ class Scrapper(object):
 
 			line.append(sub_elements[0])
 
+			print("Capiturando " + name_pokedex+extended_name + '...')
+			
+			if len(line) != len(col):
+				line.insert(18,"")
+
 			i = 0
 			for l in line:
 				col[i][1].append(l)
 				i+=1
-
-			if index > 10:
-				break
 
 		return col
 
