@@ -112,6 +112,9 @@ class Scrapper(object):
 	def dataFameToJson(self, dataFrame):
 		dataFrame.to_json('../data/PokemonData.json')
 
+	def dataFrameToCsv(self,dataFrame):
+		dataFrame.to_csv('../data/PokemonData.csv', sep='\t', encoding='utf-8')
+
 	def str_bracket(word):
 	    '''Add brackets around second term'''
 	    list = [x for x in word]
