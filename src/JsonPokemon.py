@@ -1,4 +1,4 @@
-from AbstractLoader import Loader
+from src.service.AbstractLoader import Loader
 import pandas as pd
 
 class JsonPokemon(Loader):

@@ -1,5 +1,5 @@
-from AbstractLoader import Loader
-import pandas as pd
+from src.service.AbstractLoader import Loader
+#import pandas as pd
 
 class CsvPokemon(Loader):
 
