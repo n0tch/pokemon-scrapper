@@ -109,7 +109,7 @@ class HtmlParser():
             if len(line) != 27:
                 line.insert(18,"")
 
-            if index > 30:
+            if index > 3:
                 break
 
             lines.append(line)

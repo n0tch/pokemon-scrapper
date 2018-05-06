@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 class Loader(ABC):
 
     @abstractmethod
-    def saveDataFrame(self, dataFrame):
+    def save(self, dataFrame):
         pass
 
     @abstractmethod
-    def loadDataFrame(self, pathToLoad):
+    def load(self, pathToLoad):
         pass

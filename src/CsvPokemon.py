@@ -1,10 +1,9 @@
-from src.service.AbstractLoader import Loader
-#import pandas as pd
+from AbstractLoader import Loader
 
 class CsvPokemon(Loader):
 
-    def saveDataFrame(self,dataFrame):
-        dataFrame.to_csv('../../data/PokemonData.csv')
+    def save(self,dataFrame):
+        dataFrame.to_csv('../data/PokemonData.csv')
     
-    def loadDataFrame(self, dataFrame):
-        print("Not implemented yet.")
+    def load(self, dataFrame):
+        NotImplementedError
