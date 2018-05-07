@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import multiprocessing as mp
 
 class HtmlParser():
     def __init__(self, base_url):
@@ -66,52 +67,74 @@ class HtmlParser():
         rows = table.find_all('tr')
         #pop the first line, because its the header line.
         rows.pop(0)
+        
+        manager = mp.Manager()
         lines = []
+        try:
+            with mp.Manager() as manager:
+                l = manager.list()
+                jobs = []
+                i = 0
+                for row in rows:
+                    
+                    p = mp.Process(target=self.extract_data, args=(row,l))
+                    p.start()
+                    jobs.append(p)
 
-        for index, row in enumerate(rows):
-            line = []
-            num_pokedex = row.find('td', {'class':'num cell-icon-string'}).get_text()
-            name_pokedex = row.find('a',{'class':'ent-name'}).get_text()
-            extended_name = "" 
+                    if i % 4 == 0:
+                        for proc in jobs:
+                            proc.join()
+                        
+                        for elem in l:
+                            lines.append(elem)
 
-            try:
-                extended_name = " " + row.find('small',{'class':'aside'}).get_text()
-            except:
-                pass
-            print("Capiturando " + name_pokedex+extended_name + '...')
-            link = row.find('a',{'class':'ent-name'})['href']
-            sub_link = self.base_url + link
-            types = [types.get_text() for types in row.find_all('a',{'class':'type-icon'})]
-            num_total = row.find('td', {'class':'num-total'}).get_text()
-            attrs = [attr.get_text() for attr in row.find_all('td',{'class':'num'})[-6:]]
-
-            intern_html_doc = self.html_content(sub_link)			
-
-            sub_elements = self.sub_elements(intern_html_doc)
-
-            line.append(num_pokedex)
-            line.append(name_pokedex+extended_name)
-            line.append(types)
-            line.append(num_total)
-
-            for attr in attrs:
-                line.append(attr)
-
-            for element in sub_elements[1]:
-                line.append(element)
-
-            line.append(sub_elements[0])
-
-            #tenho que ter certeza de que existem 27 colunas nas linhas
-            #pois estou pegando exatamente 28 elementos
-            #coluna 'Japonese' pode esta faltando(coluna 18).
-            #por isso insiro na coluna 18.
-            if len(line) != 27:
-                line.insert(18,"")
-
-            if index > 3:
-                break
-
-            lines.append(line)
+                    i+=1
+        except FileNotFoundError as e:
+            pass
             
+            
+        #print(lines[:])
         return lines
+    
+    def extract_data(self, row, lines):
+        line = []
+        num_pokedex = row.find('td', {'class':'num cell-icon-string'}).get_text()
+        name_pokedex = row.find('a',{'class':'ent-name'}).get_text()
+        extended_name = "" 
+
+        try:
+            extended_name = " " + row.find('small',{'class':'aside'}).get_text()
+        except:
+            pass
+        print("Capiturando " + name_pokedex+extended_name + '...')
+        link = row.find('a',{'class':'ent-name'})['href']
+        sub_link = self.base_url + link
+        types = [types.get_text() for types in row.find_all('a',{'class':'type-icon'})]
+        num_total = row.find('td', {'class':'num-total'}).get_text()
+        attrs = [attr.get_text() for attr in row.find_all('td',{'class':'num'})[-6:]]
+
+        intern_html_doc = self.html_content(sub_link)			
+
+        sub_elements = self.sub_elements(intern_html_doc)
+
+        line.append(num_pokedex)
+        line.append(name_pokedex+extended_name)
+        line.append(types)
+        line.append(num_total)
+
+        for attr in attrs:
+            line.append(attr)
+
+        for element in sub_elements[1]:
+            line.append(element)
+
+        line.append(sub_elements[0])
+
+        #tenho que ter certeza de que existem 27 colunas nas linhas
+        #pois estou pegando exatamente 28 elementos
+        #coluna 'Japonese' pode esta faltando(coluna 18).
+        #por isso insiro na coluna 18.
+        if len(line) != 27:
+            line.insert(18,"")
+
+        lines.append(line)

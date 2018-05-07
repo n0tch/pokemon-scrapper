@@ -13,6 +13,7 @@ if __name__ == '__main__':
     columns = pokemonScraper.columns()
     rows    = pokemonScraper.elements()
 
+    
     pokemon_list = pokemonScraper.elements_to_list(columns, rows)
     pokemonDF = dataFrameLoader.load_from_list(pokemon_list)
 
