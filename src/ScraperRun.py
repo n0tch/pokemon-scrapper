@@ -1,17 +1,17 @@
-import Scraper as Scraper
-from DataFrameLoader import DataFrameLoader
-from CsvPokemon import CsvLoader
+from loader.DataFrameLoader import DataFrameLoader
+from loader.CsvPokemon import CsvLoader
+from parser.PokemonMainParser import PokemonMainData
+from parser.PokemonDetailParser import PokemonDetailData
 
 if __name__ == "__main__":
-    pokemonScrapper  = Scraper.PokemonScrapper()
-    dataFrameLoader  = DataFrameLoader()
-    csvLoader        = CsvLoader()
+    dataFrameLoader   = DataFrameLoader()
+    csvLoader         = CsvLoader()
+    pokemonMainData   = PokemonMainData()
+    pokemonDetailData = PokemonDetailData()
 
-    columns = pokemonScrapper.columns()
-    rows    = pokemonScrapper.elements()    
+    main_list = pokemonMainData.load_list(max_rows = 1028)
 
-    pokemon_list = pokemonScrapper.elements_to_list(columns, rows)
-    pokemon_df = dataFrameLoader.load_from_list(pokemon_list)
+    pokemon_df = dataFrameLoader.build_dataframe(main_list[0], main_list[1])
     csvLoader.save(pokemon_df)
     print(pokemon_df)
 
