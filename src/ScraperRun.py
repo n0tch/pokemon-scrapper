@@ -1,25 +1,17 @@
 import Scraper as Scraper
-import pandas as pd
-from CsvPokemon import CsvPokemon
-from JsonPokemon import JsonPokemon
 from DataFrameLoader import DataFrameLoader
+from CsvLoader import CsvLoader
 
-if __name__ == '__main__':
-    pokemonScraper  = Scraper.PokemonScraper()
-    csvLoader       = CsvPokemon()
-    jsonLoader      = JsonPokemon()
-    dataFrameLoader = DataFrameLoader()
+if __name__ == "__main__":
+    pokemonScrapper  = Scrapper.PokemonScrapper()
+    dataFrameLoader  = DataFrameLoader()
+    csvLoader        = CsvLoader()
 
-    columns = pokemonScraper.columns()
-    rows    = pokemonScraper.elements()
+    columns = pokemonScrapper.columns()
+    rows    = pokemonScrapper.elements()    
 
-    
-    pokemon_list = pokemonScraper.elements_to_list(columns, rows)
-    pokemonDF = dataFrameLoader.load_from_list(pokemon_list)
+    pokemon_list = pokemonScrapper.elements_to_list(columns, rows)
+    pokemon_df = dataFrameLoader.load_from_list(pokemon_list)
+    csvLoader.save(pokemon_df)
+    print(pokemon_df)
 
-    print(pokemonDF.head())
-    
-    csvLoader.save(pokemonDF)
-    jsonLoader.save(pokemonDF)
-    
-    #pokemonDF = pokemonScraper.elements_to_list()
