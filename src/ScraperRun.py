@@ -1,9 +1,9 @@
 import Scraper as Scraper
 from DataFrameLoader import DataFrameLoader
-from CsvLoader import CsvLoader
+from CsvPokemon import CsvLoader
 
 if __name__ == "__main__":
-    pokemonScrapper  = Scrapper.PokemonScrapper()
+    pokemonScrapper  = Scraper.PokemonScrapper()
     dataFrameLoader  = DataFrameLoader()
     csvLoader        = CsvLoader()
 
