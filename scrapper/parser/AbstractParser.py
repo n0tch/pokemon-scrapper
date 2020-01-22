@@ -27,5 +27,5 @@ class AbstractParser(ABC):
         pass
 
     @abstractmethod
-    def load_list(self, max_rows):
+    def load_list(self, max_rows=None):
         pass

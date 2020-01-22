@@ -7,11 +7,10 @@ if __name__ == "__main__":
     dataFrameLoader   = DataFrameLoader()
     csvLoader         = CsvLoader()
     pokemonMainData   = PokemonMainData()
-    pokemonDetailData = PokemonDetailData()
+    #pokemonDetailData = PokemonDetailData()
 
-    main_list = pokemonMainData.load_list(max_rows = 1028)
+    main_list = pokemonMainData.load_list()
 
     pokemon_df = dataFrameLoader.build_dataframe(main_list[0], main_list[1])
     csvLoader.save(pokemon_df)
     print(pokemon_df)
-
