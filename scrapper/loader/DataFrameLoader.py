@@ -1,4 +1,4 @@
-from AbstractLoader import Loader
+from loader.AbstractLoader import Loader
 import pandas as pd
 
 class DataFrameLoader(Loader):
@@ -13,8 +13,13 @@ class DataFrameLoader(Loader):
         for (title,column) in pokemon_list:
             if len(column) != 0:
                 dic[title] = column
-
-        for key in dic:
-            print("{} has {} elements".format(key, len(dic[key])))
         
         return pd.DataFrame(dic)
+    
+    def build_dataframe(self, header, elements):
+        for element in elements:
+            i = 0
+            for e in element:
+                header[i][1].append(e)
+                i += 1
+        return self.load_from_list(header)

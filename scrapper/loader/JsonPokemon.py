@@ -1,4 +1,4 @@
-from AbstractLoader import Loader
+from loader.AbstractLoader import Loader
 
 class JsonPokemon(Loader):
 
